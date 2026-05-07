@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ===== TYPING EFFECT =====
   const roles = [
-    'Aspiring Data Analyst',
-    'Web Developer',
+    'Aspiring Web Developer',
+    'Software Developer',
     'Java & DSA Enthusiast',
     'Problem Solver'
   ];
