@@ -1103,7 +1103,7 @@
             <i class="fas fa-envelope"></i>
             <div>
               <span>Email</span>
-              <a href="mailto:rustamali9212@gmail.com">rustamali9212@gmail.com</a>
+              <a href="mailto:rustamali5896@gmail.com">rustamali5896@gmail.com</a>
             </div>
           </div>
           <div class="contact-item">
@@ -1182,8 +1182,8 @@
             <span class="avail-dot"></span>
             Open to internships, freelance projects &amp; placement opportunities
           </div>
-          <a href="mailto:rustamali9212@gmail.com" class="footer-email">
-            <i class="fas fa-envelope"></i> rustamali9212@gmail.com
+          <a href="mailto:rustamali5896@gmail.com" class="footer-email">
+            <i class="fas fa-envelope"></i> rustamali5896@gmail.com
           </a>
         </div>
         <div class="footer-links">
@@ -1204,7 +1204,7 @@
             <a href="https://www.linkedin.com/in/rustam-ali-509860297" target="_blank" rel="noopener" aria-label="LinkedIn" data-tooltip="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="https://github.com/RUSTAM5896" target="_blank" rel="noopener" aria-label="GitHub" data-tooltip="GitHub"><i class="fab fa-github"></i></a>
             <a href="https://x.com/home" target="_blank" rel="noopener" aria-label="Twitter" data-tooltip="Twitter / X"><i class="fab fa-twitter"></i></a>
-            <a href="mailto:rustamali9212@gmail.com" aria-label="Email" data-tooltip="Email"><i class="fas fa-envelope"></i></a>
+            <a href="mailto:rustamali5896@gmail.com" aria-label="Email" data-tooltip="Email"><i class="fas fa-envelope"></i></a>
           </div>
           <p class="footer-tagline">"Let's build something amazing together."</p>
         </div>
@@ -1242,13 +1242,21 @@
       const serviceID = 'YOUR_SERVICE_ID'; // <-- Your EmailJS Service ID
       const templateID = 'YOUR_TEMPLATE_ID'; // <-- Your EmailJS Template ID
       const publicKey = 'YOUR_PUBLIC_KEY';   // <-- Your EmailJS Public Key
-      // Make sure your EmailJS service is configured to send from rustamali9212@gmail.com.
+      const fallbackEmail = 'rustamali5896@gmail.com';
 
       emailjs.init(publicKey);
 
       const form = document.getElementById('contactForm');
       const statusText = document.getElementById('form-status');
       const submitButton = form.querySelector('button[type="submit"]');
+
+      const sendViaMailClient = function(name, email, subject, message) {
+        const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+        const mailtoLink = `mailto:${fallbackEmail}` +
+          `?subject=${encodeURIComponent(subject)}` +
+          `&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoLink;
+      };
 
       form.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -1273,6 +1281,12 @@
           return;
         }
 
+        if (serviceID === 'YOUR_SERVICE_ID' || templateID === 'YOUR_TEMPLATE_ID' || publicKey === 'YOUR_PUBLIC_KEY') {
+          sendViaMailClient(name, email, subject, message);
+          statusText.textContent = 'Opening your email client to send the message.';
+          return;
+        }
+
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
@@ -1283,8 +1297,9 @@
             form.reset();
           }, function(error) {
             console.error('EmailJS error:', error);
-            statusText.textContent = 'Message failed to send. Please try again later.';
+            statusText.textContent = 'Message failed to send. Opening email client as fallback...';
             statusText.classList.add('error');
+            sendViaMailClient(name, email, subject, message);
           })
           .finally(function() {
             submitButton.disabled = false;
